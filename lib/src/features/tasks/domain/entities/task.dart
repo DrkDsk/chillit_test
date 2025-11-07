@@ -27,6 +27,10 @@ class Task with EquatableMixin {
     );
   }
 
+  factory Task.initial() {
+    return Task(status: 'Pendiente', description: '', title: '', id: '');
+  }
+
   @override
   List<Object?> get props => [id, title, description, status];
 }

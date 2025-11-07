@@ -8,8 +8,20 @@ class LoadTasks extends TaskEvent {
   const LoadTasks();
 }
 
+class AddTaskEvent extends TaskEvent {
+  final Task task;
+
+  const AddTaskEvent({required this.task});
+}
+
 class EditTaskEvent extends TaskEvent {
   final Task task;
 
   const EditTaskEvent({required this.task});
+}
+
+class DeleteTaskEvent extends TaskEvent {
+  final String id;
+
+  const DeleteTaskEvent({required this.id});
 }

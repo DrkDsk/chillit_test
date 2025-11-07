@@ -23,7 +23,7 @@ class TaskRepositoryImpl implements TaskRepository {
   }
 
   @override
-  Future<bool> editTask({required Task task}) async {
+  Future<void> edit({required Task task}) async {
     try {
       final title = task.title;
       final description = task.description;
@@ -35,9 +35,29 @@ class TaskRepositoryImpl implements TaskRepository {
         'status': status,
       });
 
-      return true;
+      return;
     } catch (e) {
-      return false;
+      return;
     }
+  }
+
+  @override
+  Future<void> delete({required String id}) async {
+    await FirebaseFirestore.instance.collection('tasks').doc(id).delete();
+
+    return;
+  }
+
+  @override
+  Future<void> add({required Task task}) async {
+    final tasksRef = FirebaseFirestore.instance.collection('tasks');
+
+    await tasksRef.add({
+      'title': task.title,
+      'description': task.description,
+      'status': task.status,
+    });
+
+    return;
   }
 }
