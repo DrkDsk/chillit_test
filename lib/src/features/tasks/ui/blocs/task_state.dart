@@ -2,14 +2,6 @@ import 'package:chillit_test/src/features/tasks/domain/entities/task.dart';
 
 enum TaskStateStatus { initial, loading, success, error }
 
-sealed class SideEffect {
-  const SideEffect();
-}
-
-class TaskNavigationSideEffect extends SideEffect {
-  const TaskNavigationSideEffect();
-}
-
 class TaskState {
   final TaskStateStatus status;
   final List<Task> tasks;

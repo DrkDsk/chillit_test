@@ -1,10 +1,8 @@
 import 'package:chillit_test/src/core/extensions/color_extension.dart';
-import 'package:chillit_test/src/core/shared/ui/widgets/bloc_side_effect_listener.dart';
 import 'package:chillit_test/src/core/shared/ui/widgets/custom_card.dart';
 import 'package:chillit_test/src/features/tasks/domain/entities/task.dart';
 import 'package:chillit_test/src/features/tasks/ui/blocs/task_bloc.dart';
 import 'package:chillit_test/src/features/tasks/ui/blocs/task_event.dart';
-import 'package:chillit_test/src/features/tasks/ui/blocs/task_state.dart';
 import 'package:chillit_test/src/features/tasks/ui/widgets/edit_task_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -64,6 +62,7 @@ class _TaskGridViewState extends State<TaskGridView> {
                 );
 
                 _taskBloc.add(EditTaskEvent(task: newTask));
+                Navigator.of(context).pop();
               }
             },
             child: const Text('Guardar'),
@@ -75,33 +74,24 @@ class _TaskGridViewState extends State<TaskGridView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSideEffectListener<TaskBloc, SideEffect>(
-      bloc: BlocProvider.of<TaskBloc>(context),
-      listener: (context, effect) {
-        switch (effect) {
-          case TaskNavigationSideEffect():
-            Navigator.of(context).pop();
-            break;
-        }
-      },
-      child: GridView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-        itemCount: widget.tasks.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          childAspectRatio: 3 / 2,
-        ),
-        itemBuilder: (context, index) {
-          final task = widget.tasks[index];
+    return GridView.builder(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+      itemCount: widget.tasks.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        childAspectRatio: 3 / 2,
+      ),
+      itemBuilder: (context, index) {
+        final task = widget.tasks[index];
 
-          return CustomCard(
+        return SingleChildScrollView(
+          child: CustomCard(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     task.title,
@@ -115,7 +105,11 @@ class _TaskGridViewState extends State<TaskGridView> {
                     task.description,
                     style: TextStyle(color: Colors.black.customOpacity(0.5)),
                   ),
-                  const Spacer(),
+                  Text(
+                    task.status,
+                    style: TextStyle(color: Colors.black.customOpacity(0.5)),
+                  ),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -134,9 +128,9 @@ class _TaskGridViewState extends State<TaskGridView> {
                 ],
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

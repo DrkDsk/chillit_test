@@ -29,11 +29,11 @@ class _TaskScreenState extends State<TaskScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final titleController = TextEditingController(text: "");
-          final descriptionController = TextEditingController(text: "");
           final Task task = Task.initial();
-          String status = task.status;
+          late final titleController = TextEditingController(text: "");
+          late final descriptionController = TextEditingController(text: "");
           final formKey = GlobalKey<FormState>();
+          String status = task.status;
 
           await showDialog(
             context: context,
@@ -62,6 +62,7 @@ class _TaskScreenState extends State<TaskScreen> {
                         );
 
                         _taskBloc.add(AddTaskEvent(task: newTask));
+                        Navigator.of(context).pop();
                       }
                     },
                     child: const Text('Guardar'),

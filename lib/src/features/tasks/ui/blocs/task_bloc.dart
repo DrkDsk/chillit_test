@@ -8,10 +8,6 @@ import 'package:chillit_test/src/features/tasks/ui/blocs/task_state.dart';
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   final TaskRepository _repository;
 
-  final _sideEffectController = StreamController<SideEffect>.broadcast();
-
-  Stream<SideEffect> get sideEffects => _sideEffectController.stream;
-
   TaskBloc({required TaskRepository repository})
     : _repository = repository,
       super(TaskState()) {
@@ -100,7 +96,6 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       await _repository.edit(task: task);
 
       state.copyWith(status: TaskStateStatus.success);
-      _sideEffectController.add(const TaskNavigationSideEffect());
     } catch (e) {
       emit(
         state.copyWith(
