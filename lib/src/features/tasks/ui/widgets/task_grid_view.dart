@@ -1,9 +1,11 @@
 import 'package:chillit_test/src/core/extensions/color_extension.dart';
+import 'package:chillit_test/src/core/shared/ui/widgets/bloc_side_effect_listener.dart';
 import 'package:chillit_test/src/core/shared/ui/widgets/custom_card.dart';
 import 'package:chillit_test/src/features/tasks/domain/entities/task.dart';
 import 'package:chillit_test/src/features/tasks/ui/blocs/task_bloc.dart';
 import 'package:chillit_test/src/features/tasks/ui/blocs/task_event.dart';
 import 'package:chillit_test/src/features/tasks/ui/blocs/task_state.dart';
+import 'package:chillit_test/src/features/tasks/ui/widgets/edit_task_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,52 +27,25 @@ class _TaskGridViewState extends State<TaskGridView> {
     _taskBloc = BlocProvider.of<TaskBloc>(context);
   }
 
+  Future<void> _deleteTaskId({required String id}) async {
+    _taskBloc.add(DeleteTaskEvent(id: id));
+  }
+
   Future<void> _editTask(BuildContext context, Task task) async {
     final titleController = TextEditingController(text: task.title);
     final descriptionController = TextEditingController(text: task.description);
     String status = task.status;
-
     final formKey = GlobalKey<FormState>();
 
     await showDialog(
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Editar tarea'),
-        content: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: 'Título'),
-                validator: (v) =>
-                    v == null || v.isEmpty ? 'Campo requerido' : null,
-              ),
-              TextFormField(
-                controller: descriptionController,
-                decoration: const InputDecoration(labelText: 'Descripción'),
-                validator: (v) =>
-                    v == null || v.isEmpty ? 'Campo requerido' : null,
-              ),
-              DropdownButtonFormField<String>(
-                initialValue: status,
-                decoration: const InputDecoration(labelText: 'Estado'),
-                items: const [
-                  DropdownMenuItem(
-                    value: 'Pendiente',
-                    child: Text('Pendiente'),
-                  ),
-                  DropdownMenuItem(
-                    value: 'En Proceso',
-                    child: Text('En Proceso'),
-                  ),
-                  DropdownMenuItem(value: 'Hecho', child: Text('Hecho')),
-                ],
-                onChanged: (val) => status = val ?? 'Pendiente',
-              ),
-            ],
-          ),
+        content: EditTaskForm(
+          formKey: formKey,
+          task: task,
+          titleController: titleController,
+          descriptionController: descriptionController,
         ),
         actions: [
           TextButton(
@@ -98,8 +73,15 @@ class _TaskGridViewState extends State<TaskGridView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<TaskBloc, TaskState>(
-      listener: (context, state) {},
+    return BlocSideEffectListener<TaskBloc, SideEffect>(
+      bloc: BlocProvider.of<TaskBloc>(context),
+      listener: (context, effect) {
+        switch (effect) {
+          case TaskNavigationSideEffect():
+            Navigator.of(context).pop();
+            break;
+        }
+      },
       child: GridView.builder(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
         itemCount: widget.tasks.length,
@@ -142,7 +124,7 @@ class _TaskGridViewState extends State<TaskGridView> {
                       ),
                       IconButton(
                         color: Colors.redAccent,
-                        onPressed: () {},
+                        onPressed: () => _deleteTaskId(id: task.id),
                         icon: const Icon(Icons.delete),
                       ),
                     ],

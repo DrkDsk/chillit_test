@@ -1,6 +1,8 @@
+import 'package:chillit_test/src/features/tasks/domain/entities/task.dart';
 import 'package:chillit_test/src/features/tasks/ui/blocs/task_bloc.dart';
 import 'package:chillit_test/src/features/tasks/ui/blocs/task_event.dart';
 import 'package:chillit_test/src/features/tasks/ui/blocs/task_state.dart';
+import 'package:chillit_test/src/features/tasks/ui/widgets/edit_task_form.dart';
 import 'package:chillit_test/src/features/tasks/ui/widgets/task_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +27,56 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final titleController = TextEditingController(text: "");
+          final descriptionController = TextEditingController(text: "");
+          final Task task = Task(
+            id: "",
+            title: "",
+            description: "",
+            status: "Pendiente",
+          );
+          final formKey = GlobalKey<FormState>();
+          String status = task.status;
+
+          await showDialog(
+            context: context,
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Agregar tarea'),
+                content: EditTaskForm(
+                  formKey: formKey,
+                  task: task,
+                  titleController: titleController,
+                  descriptionController: descriptionController,
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Cancelar'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        final newTask = task.copyWith(
+                          title: titleController.text.trim(),
+                          description: descriptionController.text.trim(),
+                          status: status,
+                        );
+
+                        _taskBloc.add(AddTaskEvent(task: newTask));
+                      }
+                    },
+                    child: const Text('Guardar'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
       body: SafeArea(
         child: BlocBuilder<TaskBloc, TaskState>(
           builder: (context, state) {

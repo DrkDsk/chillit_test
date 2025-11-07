@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:chillit_test/src/features/tasks/data/repository/task_repository.dart';
 import 'package:chillit_test/src/features/tasks/ui/blocs/task_event.dart';
@@ -6,11 +8,61 @@ import 'package:chillit_test/src/features/tasks/ui/blocs/task_state.dart';
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   final TaskRepository _repository;
 
+  final _sideEffectController = StreamController<SideEffect>.broadcast();
+
+  Stream<SideEffect> get sideEffects => _sideEffectController.stream;
+
   TaskBloc({required TaskRepository repository})
     : _repository = repository,
       super(TaskState()) {
     on<LoadTasks>(_loadTask);
+    on<AddTaskEvent>(_addTaskEvent);
     on<EditTaskEvent>(_editTask);
+    on<DeleteTaskEvent>(_deleteTask);
+  }
+
+  Future<void> _addTaskEvent(
+    AddTaskEvent event,
+    Emitter<TaskState> emit,
+  ) async {
+    final task = event.task;
+
+    emit(state.copyWith(status: TaskStateStatus.loading, errorMessage: null));
+
+    try {
+      await _repository.add(task: task);
+
+      state.copyWith(status: TaskStateStatus.success);
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: TaskStateStatus.error,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
+  }
+
+  Future<void> _deleteTask(
+    DeleteTaskEvent event,
+    Emitter<TaskState> emit,
+  ) async {
+    final taskId = event.id;
+
+    emit(state.copyWith(status: TaskStateStatus.loading, errorMessage: null));
+
+    try {
+      await _repository.delete(id: taskId);
+
+      state.copyWith(status: TaskStateStatus.success);
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: TaskStateStatus.error,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
   }
 
   Future<void> _loadTask(LoadTasks event, Emitter<TaskState> emit) async {
@@ -45,17 +97,10 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     emit(state.copyWith(status: TaskStateStatus.loading, errorMessage: null));
 
     try {
-      final result = await _repository.editTask(task: task);
-
-      if (!result) {
-        state.copyWith(
-          status: TaskStateStatus.error,
-          errorMessage: "Ha ocurrido un error al editar",
-        );
-        return;
-      }
+      await _repository.edit(task: task);
 
       state.copyWith(status: TaskStateStatus.success);
+      _sideEffectController.add(const TaskNavigationSideEffect());
     } catch (e) {
       emit(
         state.copyWith(
