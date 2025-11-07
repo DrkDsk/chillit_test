@@ -1,16 +1,40 @@
-# chillit_test
+🧩 Flutter Tasks App
 
-A new Flutter project.
+Una aplicación desarrollada en Flutter utilizando Clean Architecture.
+La app permite gestionar tareas conectadas con Firebase, implementando BLoC para el manejo del
+estado y GetIt para la inyección de dependencias.
 
-## Getting Started
+**Capa Data**
 
-This project is a starting point for a Flutter application.
+Contiene los modelos que representan los datos tal como se reciben de Firebase.
 
-A few resources to get you started if this is your first Flutter project:
+Los modelos son parseados desde JSON y luego convertidos a entidades de dominio.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Implementa los repositorios concretos que comunican esta capa con la de dominio.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**Capa Domain**
+
+Define las entidades que representan los objetos de negocio.
+
+Contiene los contratos de repositorio (interfaces) que abstraen la fuente de datos.
+
+**Capa Presentation**
+
+Utiliza BLoC (Business Logic Component) para la gestión del estado.
+
+Cada bloque maneja eventos y estados específicos de su funcionalidad.
+
+La UI escucha los cambios de estado y se actualiza de forma reactiva.
+
+El proyecto utiliza GetIt como service locator, permitiendo una inyección de dependencias
+centralizada y desacoplada.
+
+
+| Componente             | Descripción                                            |
+| ---------------------- | ------------------------------------------------------ |
+| **Flutter**            | Framework principal de desarrollo                      |
+| **Firebase**           | Backend para almacenamiento y sincronización de tareas |
+| **BLoC**               | Gestión del estado basada en eventos y estados         |
+| **GetIt**              | Inyección de dependencias (Service Locator)            |
+| **Clean Architecture** | Separación por capas de responsabilidad                |
+| **Equatable**          | Simplificación de comparaciones de objetos en BLoC     |
