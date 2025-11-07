@@ -1,5 +1,7 @@
+import 'package:chillit_test/src/features/login/ui/cubits/login_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,10 +13,17 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  late final LoginCubit _loginCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _loginCubit = BlocProvider.of<LoginCubit>(context);
+  }
 
   Future<void> login() async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      _loginCubit.login(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
@@ -60,7 +69,6 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: login,
               child: const Text('Iniciar sesión'),
             ),
-            TextButton(onPressed: register, child: const Text('Crear cuenta')),
           ],
         ),
       ),

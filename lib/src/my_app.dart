@@ -1,5 +1,6 @@
 import 'package:chillit_test/src/core/di/di.dart';
 import 'package:chillit_test/src/features/home/presentation/screens/home_screen.dart';
+import 'package:chillit_test/src/features/login/ui/cubits/login_cubit.dart';
 import 'package:chillit_test/src/features/tasks/ui/blocs/task_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +17,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: MultiBlocProvider(
-        providers: [BlocProvider(create: (context) => getIt<TaskBloc>())],
+        providers: [
+          BlocProvider(create: (context) => getIt<LoginCubit>()),
+          BlocProvider(create: (context) => getIt<TaskBloc>()),
+        ],
         child: HomeScreen(),
       ),
     );

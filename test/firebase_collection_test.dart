@@ -1,4 +1,5 @@
 import 'package:chillit_test/src/core/constants/firebase_constants.dart';
+import 'package:chillit_test/src/features/tasks/data/datasources/task_datasource_impl.dart';
 import 'package:chillit_test/src/features/tasks/data/repository/task_repository_impl.dart';
 import 'package:chillit_test/src/features/tasks/domain/entities/task.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,10 +9,12 @@ void main() {
   group('TaskRepositoryImpl - getTasks', () {
     late FakeFirebaseFirestore fakeFirestore;
     late TaskRepositoryImpl repository;
+    late TaskDatasourceImpl datasource;
 
     setUp(() async {
       fakeFirestore = FakeFirebaseFirestore();
-      repository = TaskRepositoryImpl(firestore: fakeFirestore);
+      datasource = TaskDatasourceImpl(firestore: fakeFirestore);
+      repository = TaskRepositoryImpl(dataSource: datasource);
     });
 
     test('debe emitir una lista de tareas al escuchar el stream', () async {

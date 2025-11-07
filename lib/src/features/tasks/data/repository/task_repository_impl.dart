@@ -1,25 +1,18 @@
 import 'package:chillit_test/src/core/constants/firebase_constants.dart';
-import 'package:chillit_test/src/features/tasks/data/models/task_model.dart';
+import 'package:chillit_test/src/features/tasks/data/datasources/task_datasource.dart';
 import 'package:chillit_test/src/features/tasks/data/repository/task_repository.dart';
 import 'package:chillit_test/src/features/tasks/domain/entities/task.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TaskRepositoryImpl implements TaskRepository {
-  final FirebaseFirestore _firestore;
+  final TaskDatasource _datasource;
 
-  const TaskRepositoryImpl({required FirebaseFirestore firestore})
-    : _firestore = firestore;
+  const TaskRepositoryImpl({required TaskDatasource dataSource})
+    : _datasource = dataSource;
 
   @override
   Stream<List<Task>> getTasks() {
-    final taskModels = _firestore
-        .collection(FirebaseConstants.taskCollection)
-        .snapshots()
-        .map((snapshot) {
-          return snapshot.docs.map((doc) {
-            return TaskModel.fromFirestore(doc.data(), doc.id).toEntity();
-          }).toList();
-        });
+    final taskModels = _datasource.getTasks();
 
     return taskModels;
   }
