@@ -17,7 +17,7 @@ class TaskModel {
     return TaskModel(
       id: id,
       title: data['title'] ?? '',
-      status: data['completed'] ?? 'Pendiente',
+      status: data['status'] ?? '',
       description: data['description'] ?? '',
     );
   }

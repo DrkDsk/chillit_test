@@ -31,14 +31,9 @@ class _TaskScreenState extends State<TaskScreen> {
         onPressed: () async {
           final titleController = TextEditingController(text: "");
           final descriptionController = TextEditingController(text: "");
-          final Task task = Task(
-            id: "",
-            title: "",
-            description: "",
-            status: "Pendiente",
-          );
-          final formKey = GlobalKey<FormState>();
+          final Task task = Task.initial();
           String status = task.status;
+          final formKey = GlobalKey<FormState>();
 
           await showDialog(
             context: context,
@@ -47,6 +42,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 title: const Text('Agregar tarea'),
                 content: EditTaskForm(
                   formKey: formKey,
+                  onChangedDropDown: (value) => status = value,
                   task: task,
                   titleController: titleController,
                   descriptionController: descriptionController,

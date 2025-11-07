@@ -35,6 +35,7 @@ class _TaskGridViewState extends State<TaskGridView> {
     final titleController = TextEditingController(text: task.title);
     final descriptionController = TextEditingController(text: task.description);
     String status = task.status;
+
     final formKey = GlobalKey<FormState>();
 
     await showDialog(
@@ -42,6 +43,7 @@ class _TaskGridViewState extends State<TaskGridView> {
       builder: (_) => AlertDialog(
         title: const Text('Editar tarea'),
         content: EditTaskForm(
+          onChangedDropDown: (value) => status = value,
           formKey: formKey,
           task: task,
           titleController: titleController,

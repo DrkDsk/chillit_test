@@ -2,16 +2,19 @@ import 'package:chillit_test/src/features/tasks/domain/entities/task.dart';
 import 'package:flutter/material.dart';
 
 class EditTaskForm extends StatelessWidget {
-  const EditTaskForm({super.key,
+  const EditTaskForm({
+  super.key,
   required this.task, required,
   required this.titleController,
   required this.descriptionController,
-  required this.formKey,});
+  required this.formKey,
+required this.onChangedDropDown});
 
   final TextEditingController titleController;
   final TextEditingController descriptionController;
   final Task task;
   final GlobalKey<FormState> formKey;
+  final void Function(String value) onChangedDropDown;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +43,10 @@ class EditTaskForm extends StatelessWidget {
               DropdownMenuItem(value: 'En Proceso', child: Text('En Proceso')),
               DropdownMenuItem(value: 'Hecho', child: Text('Hecho')),
             ],
-            onChanged: (val) => status = val ?? 'Pendiente',
+            onChanged: (val) {
+              status = val ?? 'Pendiente';
+              onChangedDropDown(status);
+            },
           ),
         ],
       ),
