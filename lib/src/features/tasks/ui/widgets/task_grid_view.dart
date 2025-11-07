@@ -75,7 +75,12 @@ class _TaskGridViewState extends State<TaskGridView> {
   @override
   Widget build(BuildContext context) {
     if (widget.tasks.isEmpty) {
-      return const Center(child: Text('No hay tareas guardadas'));
+      return Center(
+        child: Text(
+          'No hay tareas guardadas',
+          style: TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
+        ),
+      );
     }
 
     return GridView.builder(
