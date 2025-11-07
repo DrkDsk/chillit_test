@@ -1,3 +1,4 @@
+import 'package:chillit_test/src/core/constants/firebase_constants.dart';
 import 'package:chillit_test/src/features/tasks/data/models/task_model.dart';
 import 'package:chillit_test/src/features/tasks/data/repository/task_repository.dart';
 import 'package:chillit_test/src/features/tasks/domain/entities/task.dart';
@@ -11,13 +12,14 @@ class TaskRepositoryImpl implements TaskRepository {
 
   @override
   Stream<List<Task>> getTasks() {
-    final taskModels = _firestore.collection('tasks').snapshots().map((
-      snapshot,
-    ) {
-      return snapshot.docs.map((doc) {
-        return TaskModel.fromFirestore(doc.data(), doc.id).toEntity();
-      }).toList();
-    });
+    final taskModels = _firestore
+        .collection(FirebaseConstants.taskCollection)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs.map((doc) {
+            return TaskModel.fromFirestore(doc.data(), doc.id).toEntity();
+          }).toList();
+        });
 
     return taskModels;
   }
@@ -29,11 +31,14 @@ class TaskRepositoryImpl implements TaskRepository {
       final description = task.description;
       final status = task.status;
 
-      await FirebaseFirestore.instance.collection('tasks').doc(task.id).update({
-        'title': title,
-        'description': description,
-        'status': status,
-      });
+      await FirebaseFirestore.instance
+          .collection(FirebaseConstants.taskCollection)
+          .doc(task.id)
+          .update({
+            'title': title,
+            'description': description,
+            'status': status,
+          });
 
       return;
     } catch (e) {
@@ -43,14 +48,19 @@ class TaskRepositoryImpl implements TaskRepository {
 
   @override
   Future<void> delete({required String id}) async {
-    await FirebaseFirestore.instance.collection('tasks').doc(id).delete();
+    await FirebaseFirestore.instance
+        .collection(FirebaseConstants.taskCollection)
+        .doc(id)
+        .delete();
 
     return;
   }
 
   @override
   Future<void> add({required Task task}) async {
-    final tasksRef = FirebaseFirestore.instance.collection('tasks');
+    final tasksRef = FirebaseFirestore.instance.collection(
+      FirebaseConstants.taskCollection,
+    );
 
     await tasksRef.add({
       'title': task.title,
