@@ -95,7 +95,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     try {
       await _repository.edit(task: task);
 
-      state.copyWith(status: TaskStateStatus.success);
+      emit(state.copyWith(status: TaskStateStatus.success));
     } catch (e) {
       emit(
         state.copyWith(

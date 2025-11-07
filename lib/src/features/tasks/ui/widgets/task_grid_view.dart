@@ -3,6 +3,7 @@ import 'package:chillit_test/src/core/shared/ui/widgets/custom_card.dart';
 import 'package:chillit_test/src/features/tasks/domain/entities/task.dart';
 import 'package:chillit_test/src/features/tasks/ui/blocs/task_bloc.dart';
 import 'package:chillit_test/src/features/tasks/ui/blocs/task_event.dart';
+import 'package:chillit_test/src/features/tasks/ui/blocs/task_state.dart';
 import 'package:chillit_test/src/features/tasks/ui/widgets/edit_task_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
