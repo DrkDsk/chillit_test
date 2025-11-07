@@ -1,8 +1,13 @@
-🧩 Flutter Tasks App
+# Flutter Tasks App
+
+
+## Características
 
 Una aplicación desarrollada en Flutter utilizando Clean Architecture.
 La app permite gestionar tareas conectadas con Firebase, implementando BLoC para el manejo del
 estado y GetIt para la inyección de dependencias.
+
+## Tech Stack
 
 **Capa Data**
 
@@ -29,7 +34,6 @@ La UI escucha los cambios de estado y se actualiza de forma reactiva.
 El proyecto utiliza GetIt como service locator, permitiendo una inyección de dependencias
 centralizada y desacoplada.
 
-
 | Componente             | Descripción                                            |
 | ---------------------- | ------------------------------------------------------ |
 | **Flutter**            | Framework principal de desarrollo                      |
@@ -39,7 +43,7 @@ centralizada y desacoplada.
 | **Clean Architecture** | Separación por capas de responsabilidad                |
 | **Equatable**          | Simplificación de comparaciones de objetos en BLoC     |
 
-## Correr Tests
+## Tests
 
 Para correr los test, ejecuta el siguiente comando:
 
