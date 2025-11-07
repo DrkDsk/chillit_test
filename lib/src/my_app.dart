@@ -1,5 +1,5 @@
 import 'package:chillit_test/src/core/di/di.dart';
-import 'package:chillit_test/src/features/home/presentation/screens/home_screen.dart';
+import 'package:chillit_test/src/features/home/ui/screens/home_screen.dart';
 import 'package:chillit_test/src/features/login/ui/cubits/login_cubit.dart';
 import 'package:chillit_test/src/features/tasks/ui/blocs/task_bloc.dart';
 import 'package:flutter/material.dart';
