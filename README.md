@@ -38,3 +38,12 @@ centralizada y desacoplada.
 | **GetIt**              | Inyección de dependencias (Service Locator)            |
 | **Clean Architecture** | Separación por capas de responsabilidad                |
 | **Equatable**          | Simplificación de comparaciones de objetos en BLoC     |
+
+## Correr Tests
+
+Para correr los test, ejecuta el siguiente comando:
+
+```bash
+  flutter test test/firebase_collection_test.dart
+```
+

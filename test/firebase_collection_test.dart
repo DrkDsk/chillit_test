@@ -1,5 +1,7 @@
 import 'package:chillit_test/src/core/constants/firebase_constants.dart';
+import 'package:chillit_test/src/features/tasks/data/datasources/task_datasource.dart';
 import 'package:chillit_test/src/features/tasks/data/datasources/task_datasource_impl.dart';
+import 'package:chillit_test/src/features/tasks/data/repository/task_repository.dart';
 import 'package:chillit_test/src/features/tasks/data/repository/task_repository_impl.dart';
 import 'package:chillit_test/src/features/tasks/domain/entities/task.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,8 +10,8 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 void main() {
   group('TaskRepositoryImpl - getTasks', () {
     late FakeFirebaseFirestore fakeFirestore;
-    late TaskRepositoryImpl repository;
-    late TaskDatasourceImpl datasource;
+    late TaskRepository repository;
+    late TaskDatasource datasource;
 
     setUp(() async {
       fakeFirestore = FakeFirebaseFirestore();
@@ -25,6 +27,7 @@ void main() {
         'description': 'Descripción 1',
         'status': 'Pendiente',
       });
+      
       await fakeFirestore.collection(collection).add({
         'title': 'Tarea 2',
         'description': 'Descripción 2',
