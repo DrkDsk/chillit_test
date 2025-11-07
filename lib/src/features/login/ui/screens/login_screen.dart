@@ -1,5 +1,5 @@
 import 'package:chillit_test/src/features/login/ui/cubits/login_cubit.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:chillit_test/src/features/login/ui/cubits/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,29 +22,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> login() async {
-    try {
-      _loginCubit.login(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
-    }
-  }
-
-  Future<void> register() async {
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
-    }
+    _loginCubit.login(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
   }
 
   @override
@@ -65,6 +46,18 @@ class _LoginScreenState extends State<LoginScreen> {
               obscureText: true,
             ),
             const SizedBox(height: 20),
+            BlocBuilder<LoginCubit, LoginState>(
+              builder: (context, state) {
+                if (state.status == LoginStateStatus.error) {
+                  return Text(
+                    state.error,
+                    style: TextStyle(color: Colors.redAccent),
+                  );
+                }
+
+                return const SizedBox.shrink();
+              },
+            ),
             ElevatedButton(
               onPressed: login,
               child: const Text('Iniciar sesión'),

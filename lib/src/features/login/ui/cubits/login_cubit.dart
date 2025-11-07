@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:chillit_test/src/features/login/domain/repositories/login_repository.dart';
 import 'package:chillit_test/src/features/login/ui/cubits/login_state.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:meta/meta.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final LoginRepository _loginRepository;
@@ -12,6 +10,10 @@ class LoginCubit extends Cubit<LoginState> {
       super(LoginState());
 
   Future<void> login({required String email, required String password}) async {
-    await _loginRepository.login(email: email, password: password);
+    try {
+      await _loginRepository.login(email: email, password: password);
+    } catch (e) {
+      emit(state.copyWith(error: e.toString(), status: LoginStateStatus.error));
+    }
   }
 }
