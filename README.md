@@ -43,6 +43,15 @@ centralizada y desacoplada.
 | **Clean Architecture** | Separación por capas de responsabilidad                |
 | **Equatable**          | Simplificación de comparaciones de objetos en BLoC     |
 
+## Compilar
+
+Para correr el proyecto, ejecuta el siguiente comando:
+
+```bash
+  flutter pub get
+  flutter run
+```
+
 ## Tests
 
 Para correr los test, ejecuta el siguiente comando:
