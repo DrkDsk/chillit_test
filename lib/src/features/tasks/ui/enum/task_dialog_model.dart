@@ -1,0 +1,1 @@
+enum TaskDialogMode { create, edit }

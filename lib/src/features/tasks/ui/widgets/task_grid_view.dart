@@ -3,7 +3,8 @@ import 'package:chillit_test/src/core/shared/ui/widgets/custom_card.dart';
 import 'package:chillit_test/src/features/tasks/domain/entities/task.dart';
 import 'package:chillit_test/src/features/tasks/ui/blocs/task_bloc.dart';
 import 'package:chillit_test/src/features/tasks/ui/blocs/task_event.dart';
-import 'package:chillit_test/src/features/tasks/ui/widgets/edit_task_form.dart';
+import 'package:chillit_test/src/features/tasks/ui/enum/task_dialog_model.dart';
+import 'package:chillit_test/src/features/tasks/ui/widgets/task_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,45 +31,17 @@ class _TaskGridViewState extends State<TaskGridView> {
   }
 
   Future<void> _editTask(BuildContext context, Task task) async {
-    final titleController = TextEditingController(text: task.title);
-    final descriptionController = TextEditingController(text: task.description);
-    String status = task.status;
-
-    final formKey = GlobalKey<FormState>();
-
     await showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Editar tarea'),
-        content: EditTaskForm(
-          onChangedDropDown: (value) => status = value,
-          formKey: formKey,
-          task: task,
-          titleController: titleController,
-          descriptionController: descriptionController,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              if (formKey.currentState!.validate()) {
-                final newTask = task.copyWith(
-                  title: titleController.text.trim(),
-                  description: descriptionController.text.trim(),
-                  status: status,
-                );
-
-                _taskBloc.add(EditTaskEvent(task: newTask));
-                Navigator.of(context).pop();
-              }
-            },
-            child: const Text('Guardar'),
-          ),
-        ],
-      ),
+      builder: (_) {
+        return TaskDialog(
+          mode: TaskDialogMode.edit,
+          initialTask: task,
+          onSubmit: (updatedTask) {
+            _taskBloc.add(EditTaskEvent(task: updatedTask));
+          },
+        );
+      },
     );
   }
 
